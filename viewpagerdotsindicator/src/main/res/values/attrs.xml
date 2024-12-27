@@ -2,8 +2,11 @@
 <resources>
     <attr name="dotsColor" format="color" />
     <attr name="selectedDotColor" format="color" />
+    <attr name="dotsProgressColor" format="color" />
     <attr name="dotsStrokeColor" format="color" />
     <attr name="dotsSize" format="dimension" />
+    <attr name="dotsWidth" format="dimension" />
+    <attr name="dotsHeight" format="dimension" />
     <attr name="dotsWidthFactor" format="float" />
     <attr name="dotsSpacing" format="dimension" />
     <attr name="dotsCornerRadius" format="dimension" />
@@ -16,7 +19,10 @@
     <declare-styleable name="DotsIndicator">
         <attr name="dotsColor" />
         <attr name="selectedDotColor" />
+        <attr name="dotsProgressColor" />
         <attr name="dotsSize" />
+        <attr name="dotsWidth" />
+        <attr name="dotsHeight" />
         <attr name="dotsWidthFactor" />
         <attr name="dotsSpacing" />
         <attr name="dotsCornerRadius" />
@@ -28,6 +34,8 @@
     <declare-styleable name="SpringDotsIndicator">
         <attr name="dotsColor" />
         <attr name="dotsSize" />
+        <attr name="dotsWidth" />
+        <attr name="dotsHeight" />
         <attr name="dotsSpacing" />
         <attr name="dotsCornerRadius" />
         <attr name="dotsStrokeWidth" />
@@ -40,6 +48,8 @@
     <declare-styleable name="WormDotsIndicator">
         <attr name="dotsColor" />
         <attr name="dotsSize" />
+        <attr name="dotsWidth" />
+        <attr name="dotsHeight" />
         <attr name="dotsSpacing" />
         <attr name="dotsCornerRadius" />
         <attr name="dotsStrokeWidth" />

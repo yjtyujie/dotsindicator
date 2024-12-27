@@ -136,8 +136,8 @@ class WormDotsIndicator @JvmOverloads constructor(
             if (stroke) R.drawable.worm_dot_stroke_background else R.drawable.worm_dot_background
         )
         val params = dotImageView.layoutParams as RelativeLayout.LayoutParams
-        params.height = dotsSize.toInt()
-        params.width = params.height
+        params.height = dotsHeight.toInt()
+        params.width = dotsWidth.toInt()
         params.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE)
 
         params.setMargins(dotsSpacing.toInt(), 0, dotsSpacing.toInt(), 0)
@@ -186,15 +186,15 @@ class WormDotsIndicator @JvmOverloads constructor(
                 when (positionOffset) {
                     in 0.0f..0.1f -> {
                         xFinalPosition = x
-                        widthFinalPosition = dotsSize
+                        widthFinalPosition = dotsWidth
                     }
                     in 0.1f..0.9f -> {
                         xFinalPosition = x
-                        widthFinalPosition = nextX - x + dotsSize
+                        widthFinalPosition = nextX - x + dotsWidth
                     }
                     else -> {
                         xFinalPosition = nextX
-                        widthFinalPosition = dotsSize
+                        widthFinalPosition = dotsWidth
                     }
                 }
 

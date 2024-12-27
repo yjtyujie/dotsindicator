@@ -2,6 +2,7 @@ package com.tbuonomo.viewpagerdotsindicator
 
 import android.animation.ArgbEvaluator
 import android.content.Context
+import android.graphics.Color
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.util.AttributeSet
@@ -11,6 +12,8 @@ import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.annotation.ColorInt
+import androidx.core.content.res.ResourcesCompat
 import com.tbuonomo.viewpagerdotsindicator.BaseDotsIndicator.Type.DEFAULT
 
 class DotsIndicator @JvmOverloads constructor(
@@ -27,11 +30,18 @@ class DotsIndicator @JvmOverloads constructor(
     private var progressMode: Boolean = false
     private var dotsElevation: Float = 0f
 
-    var selectedDotColor: Int = 0
+    @ColorInt
+    var selectedDotColor: Int = Color.TRANSPARENT
         set(value) {
             field = value
             refreshDotsColors()
         }
+    @ColorInt
+    var dotsProgressColor: Int = Color.TRANSPARENT
+//        set(value) {
+//            field = value
+//            refreshDotsColors()
+//        }
 
     private val argbEvaluator = ArgbEvaluator()
 
@@ -61,6 +71,7 @@ class DotsIndicator @JvmOverloads constructor(
                 dotsWidthFactor = 1f
             }
 
+            dotsProgressColor = a.getColor(R.styleable.DotsIndicator_dotsProgressColor, selectedDotColor)
             progressMode = a.getBoolean(R.styleable.DotsIndicator_progressMode, false)
 
             dotsElevation = a.getDimension(R.styleable.DotsIndicator_dotsElevation, 0f)
@@ -80,12 +91,10 @@ class DotsIndicator @JvmOverloads constructor(
         val imageView = dot.findViewById<ImageView>(R.id.dot)
         val params = imageView.layoutParams as LayoutParams
 
-        if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
-            dot.layoutDirection = View.LAYOUT_DIRECTION_LTR
-        }
+        dot.layoutDirection = LAYOUT_DIRECTION_LTR
 
-        params.height = dotsSize.toInt()
-        params.width = params.height
+        params.height = dotsHeight.toInt()
+        params.width = dotsWidth.toInt()
         params.setMargins(dotsSpacing.toInt(), 0, dotsSpacing.toInt(), 0)
         val background = DotsGradientDrawable()
         background.cornerRadius = dotsCornerRadius
@@ -125,14 +134,14 @@ class DotsIndicator @JvmOverloads constructor(
                 val selectedDot = dots[selectedPosition]
                 // Selected dot
                 val selectedDotWidth =
-                    (dotsSize + dotsSize * (dotsWidthFactor - 1) * (1 - positionOffset)).toInt()
+                    (dotsWidth + dotsWidth * (dotsWidthFactor - 1) * (1 - positionOffset)).toInt()
                 selectedDot.setWidth(selectedDotWidth)
 
                 if (dots.isInBounds(nextPosition)) {
                     val nextDot = dots[nextPosition]
 
                     val nextDotWidth =
-                        (dotsSize + dotsSize * (dotsWidthFactor - 1) * positionOffset).toInt()
+                        (dotsWidth + dotsWidth * (dotsWidthFactor - 1) * positionOffset).toInt()
                     nextDot.setWidth(nextDotWidth)
 
                     val selectedDotBackground = selectedDot.background as DotsGradientDrawable
@@ -147,14 +156,25 @@ class DotsIndicator @JvmOverloads constructor(
                             positionOffset, dotsColor,
                             selectedDotColor
                         ) as Int
+                        val progressColor = argbEvaluator.evaluate(
+                            positionOffset, selectedDotColor,
+                            dotsProgressColor
+                        ) as Int
 
                         nextDotBackground.setColor(nextColor)
 
-                        if (progressMode && selectedPosition <= pager!!.currentItem) {
-                            selectedDotBackground.setColor(selectedDotColor)
-                        } else {
-                            selectedDotBackground.setColor(selectedColor)
-                        }
+                        selectedDotBackground.setColor(
+                            when {
+                                progressMode && selectedPosition == pager?.currentItem -> selectedDotColor
+                                progressMode && selectedPosition < pager!!.currentItem -> progressColor
+                                else -> selectedColor
+                            }
+                        )
+//                        if (progressMode && selectedPosition <= pager!!.currentItem) {
+//                            selectedDotBackground.setColor(selectedDotColor)
+//                        } else {
+//                            selectedDotBackground.setColor(selectedColor)
+//                        }
                     }
                 }
 
@@ -162,7 +182,7 @@ class DotsIndicator @JvmOverloads constructor(
             }
 
             override fun resetPosition(position: Int) {
-                dots[position].setWidth(dotsSize.toInt())
+                dots[position].setWidth(dotsWidth.toInt())
                 refreshDotColor(position)
             }
 
@@ -176,10 +196,16 @@ class DotsIndicator @JvmOverloads constructor(
         val background = elevationItem.background as? DotsGradientDrawable?
 
         background?.let {
-            if (index == pager!!.currentItem || progressMode && index < pager!!.currentItem) {
-                background.setColor(selectedDotColor)
-            } else {
-                background.setColor(dotsColor)
+            when {
+                index == pager?.currentItem -> background.setColor(selectedDotColor)
+                progressMode && index < pager!!.currentItem -> {
+                    val color = if (dotsProgressColor != DEFAULT_POINT_COLOR) {
+                        dotsProgressColor
+                    } else selectedDotColor
+
+                    background.setColor(color)
+                }
+                else -> background.setColor(dotsColor)
             }
         }
 
