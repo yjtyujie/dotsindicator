@@ -5,10 +5,12 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.maven.publish)
     alias(libs.plugins.nmcp)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    compileSdk = 34
+    namespace = "com.tbuonomo.viewpagerdotsindicator"
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 21
@@ -23,14 +25,10 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15"
-    }
-    namespace = "com.tbuonomo.viewpagerdotsindicator"
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 dependencies {

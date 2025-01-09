@@ -1,10 +1,12 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    compileSdk = 34
+    namespace = "com.tbuonomo.dotsindicatorsample"
+    compileSdk = 36
     defaultConfig {
         applicationId = "com.tbuonomo.dotsindicatorsample"
         minSdk = 21
@@ -27,15 +29,10 @@ android {
         viewBinding = true
         compose = true
     }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15"
-    }
-    namespace = "com.tbuonomo.dotsindicatorsample"
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 dependencies {
