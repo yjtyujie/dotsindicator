@@ -4,6 +4,7 @@ plugins {
 }
 
 android {
+    namespace = "com.tbuonomo.dotsindicatorsample"
     compileSdk = 35
     defaultConfig {
         applicationId = "com.tbuonomo.dotsindicatorsample"
@@ -31,11 +32,19 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.15"
     }
-    namespace = "com.tbuonomo.dotsindicatorsample"
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "21"
+    }
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(23)
 }
 
 dependencies {

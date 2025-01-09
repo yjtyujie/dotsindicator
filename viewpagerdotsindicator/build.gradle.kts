@@ -8,6 +8,7 @@ plugins {
 }
 
 android {
+    namespace = "com.tbuonomo.viewpagerdotsindicator"
     compileSdk = 35
 
     defaultConfig {
@@ -26,11 +27,18 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.15"
     }
-    namespace = "com.tbuonomo.viewpagerdotsindicator"
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "21"
+    }
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(23)
 }
 
 dependencies {
