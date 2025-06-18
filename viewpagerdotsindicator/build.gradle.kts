@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.maven.publish)
     alias(libs.plugins.nmcp)
     alias(libs.plugins.kotlin.compose)
+    id("maven-publish")
 }
 
 android {
@@ -25,11 +26,33 @@ android {
     buildFeatures {
         compose = true
     }
+
+    publishing {
+        multipleVariants {
+            allVariants()
+            withSourcesJar()
+        }
+    }
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(17)
 }
+
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            afterEvaluate {
+                from(components["release"])
+            }
+        }
+    }
+}
+
+//mavenPublishing {
+//    publishToMavenCentral(SonatypeHost.DEFAULT)
+//    signAllPublications()
+//}
 
 dependencies {
     implementation(libs.androidx.core.ktx)
