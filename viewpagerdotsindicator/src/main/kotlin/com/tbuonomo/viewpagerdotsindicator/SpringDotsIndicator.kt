@@ -78,7 +78,7 @@ class SpringDotsIndicator @JvmOverloads constructor(
             a.recycle()
         }
 
-        dotIndicatorSize = dotsSize
+        dotIndicatorSize = dotsWidth
 
         if (isInEditMode) {
             addDots(5)
@@ -109,7 +109,7 @@ class SpringDotsIndicator @JvmOverloads constructor(
     override fun addDot(index: Int) {
         val dot = buildDot(true)
         dot.setOnClickListener {
-            if (dotsClickable && index < pager?.count ?: 0) {
+            if (dotsClickable && index < (pager?.count ?: 0)) {
                 pager!!.setCurrentItem(index, true)
             }
         }
@@ -123,17 +123,15 @@ class SpringDotsIndicator @JvmOverloads constructor(
             R.layout.spring_dot_layout, this,
             false
         ) as ViewGroup
-        if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
-            dot.layoutDirection = View.LAYOUT_DIRECTION_LTR
-        }
+        dot.layoutDirection = View.LAYOUT_DIRECTION_LTR
 
         val dotView = dot.findViewById<ImageView>(R.id.spring_dot)
         dotView.setBackgroundResource(
             if (stroke) R.drawable.spring_dot_stroke_background else R.drawable.spring_dot_background
         )
         val params = dotView.layoutParams as RelativeLayout.LayoutParams
-        params.height = (if (stroke) dotsSize else dotIndicatorSize).toInt()
-        params.width = params.height
+        params.height = (if (stroke) dotsHeight else dotIndicatorSize).toInt()
+        params.width = dotsWidth.toInt()
         params.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE)
 
         params.setMargins(dotsSpacing.toInt(), 0, dotsSpacing.toInt(), 0)
@@ -173,7 +171,7 @@ class SpringDotsIndicator @JvmOverloads constructor(
                 nextPosition: Int,
                 positionOffset: Float
             ) {
-                val distance = dotsSize + dotsSpacing * 2
+                val distance = dotsWidth + dotsSpacing * 2
                 val x = (dots[selectedPosition].parent as ViewGroup).left
                 val globalPositionOffsetPixels = x + distance * positionOffset
                 dotIndicatorSpring?.animateToFinalPosition(globalPositionOffsetPixels)
