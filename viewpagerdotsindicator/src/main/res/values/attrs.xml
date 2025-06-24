@@ -33,6 +33,7 @@
 
     <declare-styleable name="SpringDotsIndicator">
         <attr name="dotsColor" />
+        <attr name="selectedDotColor" />
         <attr name="dotsSize" />
         <attr name="dotsWidth" />
         <attr name="dotsHeight" />

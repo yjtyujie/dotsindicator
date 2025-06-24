@@ -3,17 +3,14 @@ package com.tbuonomo.viewpagerdotsindicator
 import android.animation.ArgbEvaluator
 import android.content.Context
 import android.graphics.Color
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
-import androidx.core.content.res.ResourcesCompat
+import androidx.core.content.withStyledAttributes
 import com.tbuonomo.viewpagerdotsindicator.BaseDotsIndicator.Type.DEFAULT
 
 class DotsIndicator @JvmOverloads constructor(
@@ -57,26 +54,25 @@ class DotsIndicator @JvmOverloads constructor(
         dotsWidthFactor = DEFAULT_WIDTH_FACTOR
 
         if (attrs != null) {
-            val a = context.obtainStyledAttributes(attrs, R.styleable.DotsIndicator)
+            context.withStyledAttributes(attrs, R.styleable.DotsIndicator) {
+                selectedDotColor =
+                    getColor(R.styleable.DotsIndicator_selectedDotColor, DEFAULT_POINT_COLOR)
 
-            selectedDotColor =
-                a.getColor(R.styleable.DotsIndicator_selectedDotColor, DEFAULT_POINT_COLOR)
+                dotsWidthFactor = getFloat(R.styleable.DotsIndicator_dotsWidthFactor, 2.5f)
+                if (dotsWidthFactor < 1) {
+                    Log.w(
+                        "DotsIndicator",
+                        "The dotsWidthFactor can't be set under 1.0f, please set an higher value"
+                    )
+                    dotsWidthFactor = 1f
+                }
 
-            dotsWidthFactor = a.getFloat(R.styleable.DotsIndicator_dotsWidthFactor, 2.5f)
-            if (dotsWidthFactor < 1) {
-                Log.w(
-                    "DotsIndicator",
-                    "The dotsWidthFactor can't be set under 1.0f, please set an higher value"
-                )
-                dotsWidthFactor = 1f
+                dotsProgressColor =
+                    getColor(R.styleable.DotsIndicator_dotsProgressColor, selectedDotColor)
+                progressMode = getBoolean(R.styleable.DotsIndicator_progressMode, false)
+
+                dotsElevation = getDimension(R.styleable.DotsIndicator_dotsElevation, 0f)
             }
-
-            dotsProgressColor = a.getColor(R.styleable.DotsIndicator_dotsProgressColor, selectedDotColor)
-            progressMode = a.getBoolean(R.styleable.DotsIndicator_progressMode, false)
-
-            dotsElevation = a.getDimension(R.styleable.DotsIndicator_dotsElevation, 0f)
-
-            a.recycle()
         }
 
         if (isInEditMode) {

@@ -1,9 +1,8 @@
 package com.tbuonomo.viewpagerdotsindicator
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.RelativeLayout
+import androidx.annotation.ColorInt
+import androidx.core.content.withStyledAttributes
 import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
 import com.tbuonomo.viewpagerdotsindicator.BaseDotsIndicator.Type.SPRING
@@ -39,8 +40,14 @@ class SpringDotsIndicator @JvmOverloads constructor(
     private var dotIndicatorSpring: SpringAnimation? = null
     private val strokeDotsLinearLayout: LinearLayout = LinearLayout(context)
 
-    init {
+    @ColorInt
+    var selectedDotColor: Int = Color.TRANSPARENT
+        set(value) {
+            field = value
+            refreshDotsColors()
+        }
 
+    init {
         val horizontalPadding = dpToPxF(24f)
         clipToPadding = false
         setPadding(horizontalPadding.toInt(), 0, horizontalPadding.toInt(), 0)
@@ -57,25 +64,25 @@ class SpringDotsIndicator @JvmOverloads constructor(
         dampingRatio = DEFAULT_DAMPING_RATIO
 
         if (attrs != null) {
-            val a = getContext().obtainStyledAttributes(attrs, R.styleable.SpringDotsIndicator)
+            getContext().withStyledAttributes(attrs, R.styleable.SpringDotsIndicator) {
+                selectedDotColor =
+                    getColor(R.styleable.SpringDotsIndicator_selectedDotColor, DEFAULT_POINT_COLOR)
+                // Dots attributes
+                dotIndicatorColor =
+                    getColor(R.styleable.SpringDotsIndicator_dotsColor, dotIndicatorColor)
+                dotsStrokeColor = getColor(
+                    R.styleable.SpringDotsIndicator_dotsStrokeColor,
+                    dotIndicatorColor
+                )
+                stiffness = getFloat(R.styleable.SpringDotsIndicator_stiffness, stiffness)
+                dampingRatio = getFloat(R.styleable.SpringDotsIndicator_dampingRatio, dampingRatio)
 
-            // Dots attributes
-            dotIndicatorColor =
-                a.getColor(R.styleable.SpringDotsIndicator_dotsColor, dotIndicatorColor)
-            dotsStrokeColor = a.getColor(
-                R.styleable.SpringDotsIndicator_dotsStrokeColor,
-                dotIndicatorColor
-            )
-            stiffness = a.getFloat(R.styleable.SpringDotsIndicator_stiffness, stiffness)
-            dampingRatio = a.getFloat(R.styleable.SpringDotsIndicator_dampingRatio, dampingRatio)
-
-            // Spring dots attributes
-            dotsStrokeWidth = a.getDimension(
-                R.styleable.SpringDotsIndicator_dotsStrokeWidth,
-                dotsStrokeWidth
-            )
-
-            a.recycle()
+                // Spring dots attributes
+                dotsStrokeWidth = getDimension(
+                    R.styleable.SpringDotsIndicator_dotsStrokeWidth,
+                    dotsStrokeWidth
+                )
+            }
         }
 
         dotIndicatorSize = dotsWidth
